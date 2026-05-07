@@ -41,6 +41,7 @@ export default function Checkout() {
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
+  const [totalFinal, setTotalFinal] = useState(0); // ← NUEVO
 
   const [cliente, setCliente] = useState({
     nombres: "",
@@ -78,6 +79,7 @@ export default function Checkout() {
     }));
     try {
       await API.post("/ventas", { cliente, detalles });
+      setTotalFinal(total); // ← guarda total ANTES de limpiar
       clearCart();
       setStep(3);
     } catch (error) {
@@ -189,7 +191,7 @@ export default function Checkout() {
           <p className="confirm-sub">Hemos recibido tu pago correctamente.</p>
           <div className="confirm-total-box">
             <p>Total pagado</p>
-            <strong>S/ {total.toLocaleString()}</strong>
+            <strong>S/ {totalFinal.toLocaleString()}</strong> {/* ← usa totalFinal */}
           </div>
           <button className="back-home-btn" onClick={() => navigate("/")}>
             🏠 Volver al inicio
