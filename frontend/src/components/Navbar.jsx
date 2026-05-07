@@ -1,27 +1,29 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const NAV_LINKS = [
   { label: "Inicio", path: "/" },
   { label: "Productos", path: "/" },
-  { label: "Categorías", path: "/" },
+  { label: "Categorias", path: "/" },
   { label: "Ofertas", path: "/" },
 ];
 
-export default function Navbar({ openCart, cartCount = 0 }) {
+export default function Navbar({ openCart }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { cart } = useCart();
+
+  const cartCount = cart.reduce((acc, item) => acc + item.cantidad, 0);
 
   const isCheckout = location.pathname === "/checkout";
 
   return (
     <div className="navbar">
-      {/* Logo */}
       <div className="navbar-logo" onClick={() => navigate("/")}>
         <div className="navbar-logo-icon">🛍️</div>
         Shop
       </div>
 
-      {/* Nav Links – solo en home */}
       {!isCheckout && (
         <ul className="navbar-links">
           {NAV_LINKS.map((link) => (
@@ -37,14 +39,13 @@ export default function Navbar({ openCart, cartCount = 0 }) {
         </ul>
       )}
 
-      {/* Cart / Back button */}
       {isCheckout ? (
         <button className="cart-btn" onClick={() => navigate("/")}>
-          ← Volver
+          Volver
         </button>
       ) : (
         <button className="cart-btn" onClick={openCart}>
-          🛒 Carrito
+          Carrito
           <span className="cart-badge">{cartCount}</span>
         </button>
       )}
