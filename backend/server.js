@@ -9,19 +9,18 @@ import clienteRoutes from "./routes/cliente.routes.js";
 const app = express();
 
 // 🔹 Middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"]
+}));
 app.use(express.json());
 
-// 🔹 RUTA BASE (evita "Cannot GET /")
+// 🔹 RUTA BASE
 app.get("/", (req, res) => {
   res.json({
     mensaje: "API funcionando 🚀",
-    rutas: [
-      "/clientes",
-      "/productos",
-      "/categorias",
-      "/ventas"
-    ]
+    rutas: ["/clientes", "/productos", "/categorias", "/ventas"]
   });
 });
 
@@ -31,7 +30,7 @@ app.use("/productos", productoRoutes);
 app.use("/categorias", categoriaRoutes);
 app.use("/ventas", ventaRoutes);
 
-// 🔹 PUERTO PARA LOCAL Y PRODUCCIÓN
+// 🔹 PUERTO
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
